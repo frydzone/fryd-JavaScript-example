@@ -19,6 +19,10 @@ var redis = require('./lib/redisclient');
 var dblib = require('./lib/dblib');
 var cache = require('./lib/cache');
 
+var Fryd = require('fryd');
+
+var fryd = new Fryd();
+
 var indexRouter = require('./routes/index');
 var loginRouter = require('./routes/login');
 var logoutRouter = require('./routes/logout');
@@ -63,22 +67,15 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 passport.serializeUser(function(user, done) {
-  // Placeholder for custom user serialization
-  // null is for errors
   user = user.username
   done(null, user);
 });
 
 passport.deserializeUser(function(user, done) {
-  // Placeholder for custom user deserialization.
-  // maybe you are going to get the user from mongo by id?
-  // null is for errors
   dblib.returnAccount(user)
     .then(account => {done(null, account)})
     .catch(err => {logg.error(err)})
 });
-
-console.log(process.env.FRYD_ID);
 
 passport.use(new FrydStrategy({
     clientID: process.env.FRYD_ID,
@@ -86,12 +83,18 @@ passport.use(new FrydStrategy({
     callbackURL: 'http://localhost:3000/frydauthcallback',
   },
   function(accessToken, refreshToken, profile, done) {
-    console.log(profile);
     dblib.findAccount(profile.username)
       .then(res => {
         if (res) {
           cache.setFrydTokens(profile.username, accessToken, refreshToken)
             .then(() => {
+              dblib.addLogin(profile.username)
+                .then((res) => {
+                  logg.info(res)
+                })
+                .catch(err => {
+                  logg.error(err)
+                })
               return done(null, profile)
             })
             .catch(err => {
@@ -103,6 +106,19 @@ passport.use(new FrydStrategy({
             .then(() => {
               cache.setFrydTokens(profile.username, accessToken, refreshToken)
                 .then(res => {
+                  cache.getFrydToken()
+                    .then(appToken => {
+                      fryd.postTrophySuccess(accessToken, appToken, process.env.LOCATION_ID, '7FFB83C2AAF3CB3784A6307B')
+                        .then(() => {
+                          logg.info('Trophy was awarded to ' + profile.username)
+                        })
+                        .catch(err => {
+                          logg.error(err)
+                        })
+                    })
+                    .catch(err => {
+                      logg.error(err)
+                    })
                   return done(null, profile)
                 })
                 .catch(err => {
