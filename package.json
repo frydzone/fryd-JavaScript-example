@@ -1,10 +1,19 @@
 {
-  "name": "snake-fryd",
-  "version": "0.0.0",
+  "name": "fryd-js-example",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
   },
+  "keywords": [
+    "fryd"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frydzone/fryd-JavaScript-example.git"
+  },
+  "author": "George Danzer",
+  "license": "MIT",
   "dependencies": {
     "connect-redis": "^3.3.3",
     "cookie-parser": "~1.4.3",
