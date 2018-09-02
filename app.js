@@ -80,7 +80,7 @@ passport.deserializeUser(function(user, done) {
 passport.use(new FrydStrategy({
     clientID: process.env.FRYD_ID,
     clientSecret: process.env.FRYD_SECRET,
-    callbackURL: 'http://localhost:3000/frydauthcallback',
+    callbackURL: process.env.CALLBACK_URL,
   },
   function(accessToken, refreshToken, profile, done) {
     dblib.findAccount(profile.username)
@@ -108,7 +108,7 @@ passport.use(new FrydStrategy({
                 .then(res => {
                   cache.getFrydToken()
                     .then(appToken => {
-                      fryd.postTrophySuccess(accessToken, appToken, process.env.LOCATION_ID, '7FFB83C2AAF3CB3784A6307B')
+                      fryd.postTrophySuccess(accessToken, appToken, process.env.LOCATION_ID, process.env.LOGIN_TROPHY)
                         .then(() => {
                           logg.info('Trophy was awarded to ' + profile.username)
                         })
