@@ -27,11 +27,9 @@ CALLBACK_URL=<from Fryd developer dashboard>
 FRYD_SECRET=<from Fryd developer dashboard>
 FRYD_ID=<from Fryd developer dashboard>
 LOCATION_ID=<from Fryd developer dashboard>
-LOGIN_TROPY=< trophy key from Fryd developer dashboard>
+LOGIN_TROPHY=< trophy key from Fryd developer dashboard>
 
 ```
-
-Add
 
 Clone the repository, `npm install` and `npm start`.
 
@@ -39,4 +37,4 @@ The app login should be available at http://localhost:3000.
 
 After registering an account at https://fryd.zone/register users can login and are awarded a the login trophy for it.
 
-TODO: add more functionality to showcase all of Fryd's functionality.
+#### TODO: add more functionality to showcase all of Fryd's functionality.
